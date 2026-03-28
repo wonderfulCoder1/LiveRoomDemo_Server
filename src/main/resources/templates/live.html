@@ -272,9 +272,18 @@
                             "autoplay": true,
                             sources: [{
                                 /*rtmp://live.hkstv.hk.lxdns.com/live/hks*/
-                                src: 'rtmp://live.hkstv.hk.lxdns.com/live/hks',
-                                type: 'rtmp/flv'
-                            }]
+                                // src: 'rtmp://127.0.0.1:1935/live/demo',
+                                // type: 'rtmp/mp4',
+                                // src: 'rtmp://liteavapp.qcloud.com/live/liteavdemoplayerstreamid',
+                                // type: 'rtmp/mp4',
+                                // src: 'http://127.0.0.1/hls/demo.m3u8',
+                                // type: 'application/x-mpegURL'
+                                src: 'http://127.0.0.1:8888/live/demo/index.m3u8',
+                                type: 'application/x-mpegURL'
+                            }],
+                            // flash: {
+                            //     swf: "./video-js.swf"
+                            // }
                         },
                         function () {
                             this.on('loadeddata', function () {
@@ -282,7 +291,7 @@
                             })
 
                             this.on('pause', function () {
-                                //alert('pause')
+                                alert('pause')
                             })
                         }
                     )
@@ -318,8 +327,8 @@
         });
         function changeSrc(){
             alert("请使用推流软件(OBS等)，推送到rtmp://139.199.82.213/live/demo,即可在本直播间看到您的直播内容!")
-            chatroom.videoPlayer.src('rtmp://139.199.82.213/live/demo')
-            chatroom.videoPlayer.load('rtmp://139.199.82.213/live/demo');
+            chatroom.videoPlayer.src('rtmp://127.0.0.1/live/demo')
+            chatroom.videoPlayer.load('rtmp://127.0.0.1/live/demo');
             chatroom.videoPlayer.play()
         }
     </script>
