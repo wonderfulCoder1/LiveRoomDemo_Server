@@ -3,6 +3,8 @@ package com.hushangjie.service;
 import com.hushangjie.dao.StatDao;
 import com.hushangjie.entity.Guest;
 import com.hushangjie.entity.UserEntity;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.Message;
@@ -28,6 +30,7 @@ import static org.springframework.messaging.simp.stomp.DefaultStompSession.EMPTY
  * Created by Administrator on 2017/6/13.
  */
 public class MyChannelInterceptor extends ChannelInterceptorAdapter {
+    private static final Logger log = LoggerFactory.getLogger(MyChannelInterceptor.class);
     @Autowired
     private StatDao statDao;
     @Autowired
@@ -35,12 +38,13 @@ public class MyChannelInterceptor extends ChannelInterceptorAdapter {
 
     @Override
     public boolean preReceive(MessageChannel channel) {
-        System.out.println("preReceive");
+        log.info("preReceive");
         return super.preReceive(channel);
     }
 
     @Override
     public Message<?> preSend(Message<?> message, MessageChannel channel) {
+        log.info("preSend");
         StompHeaderAccessor accessor = StompHeaderAccessor.wrap(message);
         StompCommand command = accessor.getCommand();
         //检测用户订阅内容（防止用户订阅不合法频道）
@@ -63,12 +67,13 @@ public class MyChannelInterceptor extends ChannelInterceptorAdapter {
     }
     @Override
     public void afterSendCompletion(Message<?> message, MessageChannel channel, boolean sent, Exception ex) {
-        //System.out.println("afterSendCompletion");
+        log.info("afterSendCompletion");
         //检测用户是否连接成功，搜集在线的用户信息如果数据量过大我们可以选择使用缓存数据库比如redis,
         //这里由于需要频繁的删除和增加集合内容，我们选择set集合来存储在线用户
         StompHeaderAccessor accessor = StompHeaderAccessor.wrap(message);
         StompCommand command = accessor.getCommand();
-        System.out.println("命令="+command);
+        log.info("{}",accessor.toMap());
+        log.info("命令="+command);
         if (StompCommand.CONNECT.equals(command)){
             Map<String,UserEntity> map = (Map<String, UserEntity>) accessor.getHeader("simpSessionAttributes");
             //ONLINE_USERS.add(map.get("user"));

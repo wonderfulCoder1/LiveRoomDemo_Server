@@ -9,7 +9,9 @@
     <link href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.css" rel="stylesheet">
     <link href="css/bootstrap.css" rel="stylesheet"/>
     <script src="http://cdn.bootcss.com/sockjs-client/1.1.1/sockjs.min.js"></script>
-    <script src="http://cdn.bootcss.com/stomp.js/2.3.3/stomp.js"></script>
+<!--    <script src="http://cdn.bootcss.com/stomp.js/2.3.3/stomp.js"></script>-->
+    <script src="static/js/videojs-contrib-hlsjs.min.js"></script>
+    <script src="js/stomp.js"></script>
     <script src="js/jquery-2.1.0.min.js"></script>
     <script src="js/bootstrap.js"></script>
     <script src="js/vue.js"></script>
@@ -69,7 +71,7 @@
                 <div>
                     <img class="img-responsive" style="width: 80px;height:80px; float: left;"
                          src="images/haha.gif" alt="">
-                    <button class="btn btn-default pull-right" style="background-color: #47d5af" onclick="changeSrc()">我要直播</button>
+                    <button class="btn btn-default pull-right" style="background-color: #47d5af" @click="changeSrc()">我要直播</button>
                     <h3 style="margin-left: 15px;margin-top: 10px; float: left;">直播间demo(移动端、电脑端、安卓客户端)</h3>
                 </div>
             </div>
@@ -161,6 +163,9 @@
             描述：右侧讨论区结束
         -->
     </div>
+    <div class="row" style="margin: 10px auto">
+        <button type="button" class="btn btn-primary" @click="sendMessage">test</button>
+    </div>
 </div>
 <div class="footer" style="margin-top: 60px;background:rgb(71, 213, 175);">
     <div class="container">
@@ -224,7 +229,7 @@
                         creator: '系统消息',
                         msgBody: '连接中...'
                     })
-                    var socket = new SockJS("/LiveDemo/live")
+                    var socket = new SockJS("/live")
                     this.stompClient = Stomp.over(socket)
                     this.stompClient.connect({}, function (frame) {
                         chatroom.messages.push({
@@ -248,8 +253,10 @@
                             }
                             $('#danmu').danmu("addDanmu",aDanmu)
                         });
+                        chatroom.stompClient.send('/demo/test', {}, 'hello world');
 
-
+                    },()=>{
+                        console.log('连接失败，请检查')
                     });
                 },
                 sendMessage: function () {
@@ -270,16 +277,18 @@
                             "techOrder": ["html5", "flash"],
                             controls: true,
                             "autoplay": true,
+                            loop:true,
                             sources: [{
                                 /*rtmp://live.hkstv.hk.lxdns.com/live/hks*/
                                 // src: 'rtmp://127.0.0.1:1935/live/demo',
-                                // type: 'rtmp/mp4',
+                                src: 'rtmp://127.0.0.1:1935/video/cxk.mp4',
+                                type: 'rtmp/mp4',
                                 // src: 'rtmp://liteavapp.qcloud.com/live/liteavdemoplayerstreamid',
                                 // type: 'rtmp/mp4',
                                 // src: 'http://127.0.0.1/hls/demo.m3u8',
                                 // type: 'application/x-mpegURL'
-                                src: 'http://127.0.0.1:8888/live/demo/index.m3u8',
-                                type: 'application/x-mpegURL'
+                                // src: 'http://127.0.0.1:8888/live/demo/index.m3u8',
+                                // type: 'application/x-mpegURL'
                             }],
                             // flash: {
                             //     swf: "./video-js.swf"
@@ -295,6 +304,13 @@
                             })
                         }
                     )
+                },
+                changeSrc(){
+                    console.log('aaaa')
+                    alert("请使用推流软件(OBS等)，推送到rtmp://139.199.82.213/live/demo,即可在本直播间看到您的直播内容!")
+                    chatroom.videoPlayer.src('D:\\zengli\\code\\LiveRoomDemo_Server\\video\\cxk.mp4')
+                    chatroom.videoPlayer.load('D:\\zengli\\code\\LiveRoomDemo_Server\\video\\cxk.mp4');
+                    chatroom.videoPlayer.play()
                 }
 
             },
@@ -325,12 +341,7 @@
                 $('#danmu').danmu('danmuStart');
             }
         });
-        function changeSrc(){
-            alert("请使用推流软件(OBS等)，推送到rtmp://139.199.82.213/live/demo,即可在本直播间看到您的直播内容!")
-            chatroom.videoPlayer.src('rtmp://127.0.0.1/live/demo')
-            chatroom.videoPlayer.load('rtmp://127.0.0.1/live/demo');
-            chatroom.videoPlayer.play()
-        }
+
     </script>
 </div>
 </body>
