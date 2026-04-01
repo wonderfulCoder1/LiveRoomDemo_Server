@@ -7,6 +7,8 @@ import com.hushangjie.entity.UserEntity;
 import com.hushangjie.service.IpUtil;
 import com.hushangjie.service.NameGenerator;
 import com.hushangjie.service.UserAgentUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -26,6 +28,7 @@ import java.util.*;
  */
 @Controller
 public class DemoController {
+    private static final Logger log = LoggerFactory.getLogger(DemoController.class);
     @Autowired
     private UserDao userDao;
     @Autowired
@@ -41,6 +44,7 @@ public class DemoController {
             //用户曾经访问过
             System.out.println("用户曾经访问过");
             user = userDao.findOne(ip);
+            log.info("老用户 ip:{},randomName:{}", ip, user.getRandomName());
         }else {
             //用户未访问过，存储用户信息
             System.out.println("用户未访问过");
@@ -48,6 +52,7 @@ public class DemoController {
             user.setIp(ip);
             user.setRandomName(NameGenerator.generate());
             //System.out.println("ip="+ip+"name="+user.getRandomName());
+            log.info("注册新用户 ip:{},randomName:{}", ip, user.getRandomName());
             userDao.save(user);
         }
         //System.out.println("ip="+ip+"name="+user.getRandomName());

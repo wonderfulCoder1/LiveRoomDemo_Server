@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link href="//vjs.zencdn.net/5.19/video-js.min.css" rel="stylesheet">
+</head>
+<body>
+<video id=player width=600 height=300 class="video-js vjs-default-skin" controls autoplay>
+<!--    <source src="http://127.0.0.1/hls/demo.m3u8" type="application/x-mpegURL">-->
+</video>
+<script src="../static/js/videojs.js"></script>
+<!--<script src="../static/js/videojs-contrib-hlsjs.min.js"></script>-->
+<script>
+    var player = videojs('#player', {
+        sources: [{
+            src: 'http://127.0.0.1/hls/demo.m3u8',
+            type: 'application/x-mpegURL'
+        }],
+    });
+</script>
+</body>
+</html>

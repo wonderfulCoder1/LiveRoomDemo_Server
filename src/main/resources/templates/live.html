@@ -8,9 +8,10 @@
     <!--<script src="http://vjs.zencdn.net/ie8/1.1.1/videojs-ie8.min.js"></script>-->
     <link href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.css" rel="stylesheet">
     <link href="css/bootstrap.css" rel="stylesheet"/>
-    <script src="http://cdn.bootcss.com/sockjs-client/1.1.1/sockjs.min.js"></script>
+<!--    <script src="http://cdn.bootcss.com/sockjs-client/1.1.1/sockjs.min.js"></script>-->
 <!--    <script src="http://cdn.bootcss.com/stomp.js/2.3.3/stomp.js"></script>-->
-    <script src="static/js/videojs-contrib-hlsjs.min.js"></script>
+    <script src="js/videojs-contrib-hlsjs.min.js"></script>
+    <script src="js/sockjs.js"></script>
     <script src="js/stomp.js"></script>
     <script src="js/jquery-2.1.0.min.js"></script>
     <script src="js/bootstrap.js"></script>
@@ -54,6 +55,11 @@
         }
         #danmu {
             width: 100% !important;
+            height: 400px !important;
+        }
+
+        .vjs-big-play-button{
+            z-index: 100
         }
     </style>
 </head>
@@ -93,9 +99,7 @@
 
             <div style="position:relative; background-color: black ; height: 439px; width: 100%;">
                 <div id="danmu" style=""></div>
-                <video id="v-player"
-                        class="video-js col-center-block">
-
+                <video id="v-player" class="video-js col-center-block vjs-big-play-centered" controls>
                     <!--<source src="rtmp://live.hkstv.hk.lxdns.com/live/hks"  type="rtmp/flv"></source>-->
                 </video>
             </div>
@@ -276,17 +280,17 @@
                             width: '640px',
                             "techOrder": ["html5", "flash"],
                             controls: true,
-                            "autoplay": true,
+                            autoplay: 'muted',
                             loop:true,
                             sources: [{
                                 /*rtmp://live.hkstv.hk.lxdns.com/live/hks*/
                                 // src: 'rtmp://127.0.0.1:1935/live/demo',
-                                src: 'rtmp://127.0.0.1:1935/video/cxk.mp4',
-                                type: 'rtmp/mp4',
+                                // src: 'rtmp://127.0.0.1:1935/video/cxk.mp4',
+                                // type: 'rtmp/mp4',
                                 // src: 'rtmp://liteavapp.qcloud.com/live/liteavdemoplayerstreamid',
                                 // type: 'rtmp/mp4',
-                                // src: 'http://127.0.0.1/hls/demo.m3u8',
-                                // type: 'application/x-mpegURL'
+                                src: 'http://127.0.0.1/hls/demo.m3u8',
+                                type: 'application/x-mpegURL'
                                 // src: 'http://127.0.0.1:8888/live/demo/index.m3u8',
                                 // type: 'application/x-mpegURL'
                             }],
@@ -304,6 +308,7 @@
                             })
                         }
                     )
+                    this.videoPlayer.play()
                 },
                 changeSrc(){
                     console.log('aaaa')
